@@ -8,14 +8,8 @@ from .content import YouTubeAPI
 class Video(YouTubeAPI):
     """
     Represents a YouTube video, encapsulating its unique identifier and core attributes. 
-    Through integration with the YouTube API, this class furnishes a comprehensive suite 
-    of methods designed to retrieve a wide range of video details. These details encompass 
-    basic metadata like the video's name, channel, and publication date, as well as more 
-    granular statistics such as views, likes, and comments. Additionally, it provides 
-    functionalities to fetch and process the video transcript, making it a versatile tool 
-    for diverse YouTube video analyses.
+    Functionality to extract static video properties, statisitcs and transcript.
     """
-
     SHORTS_MAX_LENGTH = 60
     
     def __init__(self, video_id:str) -> None:
