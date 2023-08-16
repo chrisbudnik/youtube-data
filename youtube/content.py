@@ -1,63 +1,29 @@
-from typing import Literal
+import os
 from abc import ABC, abstractmethod
 from googleapiclient.discovery import build
 
 
-#TO-DO - refactor youtube api as new base
 class YoutubeContent(ABC):
-    pass
 
-# TO-DO - add helper docs for part string in api calls
-class YouTubeAPI:
-    """
-    A class to interact with the YouTube Data API v3, providing methods to fetch video details, 
-    channel details, search results, and playlist items.
-    """
-    def __init__(self):
-        self.youtube = build(Config.YOUTUBE_API_SERVICE_NAME, Config.YOUTUBE_API_VERSION, developerKey=Config.DEVELOPER_KEY)
+    def __init__(self):        
+        self.youtube = self.build_youtube_object()
+        self.response_data = None
 
-    def get_video_response(self, video_id: str, part: str):
-        return self.youtube.videos().list(
-            part=part,
-            id=video_id
-        ).execute()
-
-    def get_channel_response(self, channel_id: str, part: str):
-        return self.youtube.channels().list(
-            part=part,
-            id=channel_id
-        ).execute()
-    
-    def get_search_response(
-            self, 
-            key: str, 
-            part: str,
-            type: Literal["video", "channel", "playlist", "movie"],
-            order_by: Literal["viewCount", "relevance", "date"],
-            max_results: int,
-            published_after = None
-            ):
+    def build_youtube_object(self):
+        """Builds and returns the YouTube API service object."""
+        api_key = os.environ.get('YOUTUBE_API_KEY')
+        if not api_key:
+            raise ValueError("YOUTUBE_API_KEY environment variable is not set.")
         
-        return self.youtube.search().list(
-                q=key,
-                type=type,
-                order=order_by,
-                publishedAfter=published_after,
-                part=part,
-                maxResults=max_results
-            ).execute()
+        return build('youtube', 'v3', developerKey=self.api_key)
 
-    def get_playlist_response(
-            self,
-            playlist_id: str,
-            part: str,
-            max_results: int = 50,
-            page_token = None
-        ):
+    @abstractmethod
+    def get_response(self, **kwargs):
+        """
+        Abstract method to be overridden by subclasses.
+        Fetches and stores content from the YouTube API.
+        """
+        pass
 
-        return self.youtube.playlistItems().list(
-                part=part,
-                playlistId=playlist_id,
-                maxResults=max_results,
-                pageToken=page_token
-            ).execute()
+
+
