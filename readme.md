@@ -7,14 +7,15 @@ Welcome to the Youtube-Data repository. Dive into an efficient suite designed fo
 - **`Playlist`**: Fetch video IDs from any given playlist.
 - **`Channel`**: Retrieve all video IDs associated with a channel.
 - **`YoutubeSearch`**: A dedicated class to find channels or inspect video IDs.
-- **Data Collectors (`VideoDataCollector`)**: A seamless interface to fetch video data based on video or channel IDs.
+- **`VideoDataCollector`**: A class to fetch video data based on video or channel IDs.
+- **`Trending`** Fetch video ids from country's trending page - *in progess*.
 
 ## 📁 Directory Structure:
 ### 1. `youtube`
 - This directory houses core functionality and classes associated with YouTube data extraction and manipulation:
-  - Video, Playlist, and Channel classes for various data extraction tasks.
-  - YoutubeSearch class for enhanced search functionality.
-  - VideoDataCollector interface for a cohesive data collection experience.
+  - `Video`, `Playlist`, and `Channel` classes for various data extraction tasks.
+  - `YoutubeSearch` class for enhanced search functionality.
+  - `VideoDataCollector` interface for a cohesive data collection experience.
 
 ### 2. `examples`
 - Provides instructive code samples for various functionalities including:
