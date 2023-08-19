@@ -7,7 +7,6 @@ class YoutubeContent(ABC):
 
     def __init__(self):        
         self.youtube = self.build_youtube_object()
-        self.response_data = None
 
     def build_youtube_object(self):
         """Builds and returns the YouTube API service object."""
@@ -15,7 +14,7 @@ class YoutubeContent(ABC):
         if not api_key:
             raise ValueError("YOUTUBE_API_KEY environment variable is not set.")
         
-        return build('youtube', 'v3', developerKey=self.api_key)
+        return build('youtube', 'v3', developerKey=api_key)
 
     @abstractmethod
     def get_response(self, **kwargs):

@@ -2,12 +2,12 @@ from tqdm import tqdm
 from datetime import datetime, timezone, timedelta
 from typing import Literal, Union, List
 
-from video import Video
-from channel import Channel
-from content import YouTubeAPI
+from .video import Video
+from .channel import Channel
+from .content import YoutubeContent
 
 
-class YouTubeSearch(YouTubeAPI):
+class YouTubeSearch(YoutubeContent):
     """
     The YouTubeSearch class enables targeted search capabilities on YouTube by 
     leveraging the functionalities provided by the YouTubeAPI. It allows users to perform 
@@ -17,6 +17,26 @@ class YouTubeSearch(YouTubeAPI):
     def __init__(self, keywords: list[str]):
         super().__init__()
         self.keywords = keywords
+    
+    def get_response(
+            self, 
+            key: str, 
+            part: str,
+            type: Literal["video", "channel", "playlist", "movie"],
+            order_by: Literal["viewCount", "relevance", "date"],
+            max_results: int,
+            published_after = None
+            ):
+        
+        return self.youtube.search().list(
+                q=key,
+                type=type,
+                order=order_by,
+                publishedAfter=published_after,
+                part=part,
+                maxResults=max_results
+            ).execute()
+
 
     def execute_search(
             self, 
@@ -41,7 +61,7 @@ class YouTubeSearch(YouTubeAPI):
         all_search_data = []
 
         for key in tqdm(self.keywords, desc="Collecting results for keyword..."):
-            search_response = self.get_search_response(key, 'id, snippet', type, order_by, max_results, published_after)
+            search_response = self.get_response(key, 'id, snippet', type, order_by, max_results, published_after)
 
             for item in search_response.get('items', []):
                     result = item['id'][f'{type}Id']

@@ -1,9 +1,9 @@
 from typing import List, Tuple
-from content import YouTubeAPI
-from video import Video
+from .content import YoutubeContent
+from .video import Video
 
 
-class Playlist(YouTubeAPI):
+class Playlist(YoutubeContent):
     """
     Represents a YouTube playlist, describing its unique identifier and core attributes. 
     Through integration with the YouTube API, this class provides methods to retrieve essential 
@@ -24,6 +24,21 @@ class Playlist(YouTubeAPI):
     def __hash__(self):
         return hash(self.playlist_id)
     
+    def get_response(
+            self,
+            playlist_id: str,
+            part: str,
+            max_results: int = 50,
+            page_token = None
+        ):
+
+        return self.youtube.playlistItems().list(
+                part=part,
+                playlistId=playlist_id,
+                maxResults=max_results,
+                pageToken=page_token
+            ).execute()
+    
     def get_playlist_videos(
             self, 
             max_results: int = 50, 
@@ -35,7 +50,7 @@ class Playlist(YouTubeAPI):
         Returns a tuple containing a list of Video objects and a token for the next page of results.
         """
         
-        playlist_response = self.get_playlist_response(self.playlist_id, 'contentDetails', max_results, page_token)
+        playlist_response = self.get_response(self.playlist_id, 'contentDetails', max_results, page_token)
 
         video_ids = [Video(item['contentDetails']['videoId']) for item in playlist_response['items']]
         next_page_token = playlist_response.get('nextPageToken')
