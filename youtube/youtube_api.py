@@ -1,3 +1,4 @@
+import os
 from typing import Literal
 from googleapiclient.discovery import build
 
@@ -7,7 +8,15 @@ class YouTubeAPI:
     channel details, search results, and playlist items.
     """
     def __init__(self):
-        self.youtube = build("youtube", "v3", developerKey=None)
+        self.youtube = self.build_youtube_object()
+
+    def build_youtube_object(self):
+        """Builds and returns the YouTube API service object."""
+        api_key = os.environ.get('YOUTUBE_API_KEY')
+        if not api_key:
+            raise ValueError("YOUTUBE_API_KEY environment variable is not set.")
+        
+        return build('youtube', 'v3', developerKey=api_key)
 
     def get_video_response(self, video_id: str, part: str):
         return self.youtube.videos().list(
