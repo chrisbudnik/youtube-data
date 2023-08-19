@@ -2,10 +2,10 @@ import re
 from dateutil.parser import parse
 from datetime import datetime
 from youtube_transcript_api import YouTubeTranscriptApi
-from .content import YouTubeAPI
+from .content import YoutubeContent
 
 
-class Video(YouTubeAPI):
+class Video(YoutubeContent):
     """
     Represents a YouTube video, encapsulating its unique identifier and core attributes. 
     Functionality to extract static video properties, statisitcs and transcript.
@@ -32,9 +32,7 @@ class Video(YouTubeAPI):
         return hash(self.video_id)
     
     def __len__(self):
-        """
-        Returns the video's length in seconds.
-        """
+        """Returns the video's length in seconds."""
         if self._video_length is None:
             self._video_length = self.get_video_properties()['length']
         return self._video_length
@@ -57,13 +55,18 @@ class Video(YouTubeAPI):
             self._channel_id= self.get_video_properties()['channel_id']
         return self._channel_id
     
+    def get_response(self, video_id: str, part: str):
+        return self.youtube.videos().list(
+            part=part,
+            id=video_id
+        ).execute()
     
     def get_video_properties(self) -> dict:
         """
         Fetch and return detailed properties of the video, including its name, channel, 
         publication date, length, type, license, etc.
         """
-        response = self.get_video_response(self.video_id, 'contentDetails, snippet, status')
+        response = self.get_response(self.video_id, 'contentDetails, snippet, status')
 
         video_length = self._convert_time_to_seconds(response['items'][0]['contentDetails']['duration'])
 
@@ -87,7 +90,7 @@ class Video(YouTubeAPI):
         """
         Fetch and return statistics of the video, including views, likes, and comments.
         """
-        response = self.get_video_response(self.video_id, 'statistics, contentDetails')
+        response = self.get_response(self.video_id, 'statistics, contentDetails')
         
         video_stats = {
             "date": datetime.now().strftime('%Y-%m-%d'),
