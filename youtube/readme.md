@@ -25,9 +25,48 @@ class YoutubeContent(ABC):
 ```
 
 #### Data Structure Hierarchy:
-1. **Video**: This is the smallest and most granular data structure. It contains methods that allow extraction of static properties, dynamic statistics, and video transcripts.Key methods are: `get_video_properties`, `get_video_statistics`, `get_video_transcript`.
+1. **Video**: This is the smallest and most granular data structure. It contains methods that allow extraction of static properties, dynamic statistics, and video transcripts.
+```python
+class Video:
+
+    def get_video_properties(self):
+        """
+        Extracts details such as "video_id", "video_name", "channel_id", 
+        "channel_name", "category_id", "published_at", "video_length", 
+        "type", "license", "made_for_kids", "user_tags", and "description".
+        """
+        pass
+
+    def get_video_statistics(self):
+        """
+        Provides statistics like ["date", "video_id", "views", "likes", "comments"].
+        """
+        pass
+
+    def get_video_transcript(self):
+        """Extracts video transcript."""
+        pass
+```
 2. **Playlist**: Represents a collection of videos. It has a primary function of extracting all videos that are part of it. This is achived with `get_playlist_videos` method that gathers all correspodning `Video` in a list format.
-3. **Channel**: The highest level in the data hierarchy. It encompasses both videos and playlists. It offers functionalities such as finding a playlist by its name and extracting all videos from the "uploads" playlist. Respectively, these features were implemented with `get_playlist_videos` and `get_playlist_id` methods.
+```python
+class Playlist:
+
+    def get_playlist_videos(self):
+        """Gathers all corresponding Video elements in a list format."""
+        pass
+```
+3. **Channel**: The highest level in the data hierarchy. It encompasses both videos and playlists. It offers functionalities such as finding a playlist by its name and extracting all videos from the "uploads" playlist.
+```python
+class Channel:
+
+    def get_channel_videos(self):
+        """Determines the uploads playlist ID and returns a list of Video elements."""
+        pass
+
+    def get_playlist_id(self, name):
+        """Finds the ID of a playlist based on the provided name."""
+        pass
+```
 
 The hierarchy visualizes as: **Channel** > **Playlist** > **Video**. This encapsulates the real-world relationship of YouTube entities.
 
@@ -43,3 +82,18 @@ For conveniance `VideoDataCollector` can serve both functionalities at the same 
 
 ### Final Thoughts:
 The architectural design of the YouTube module adheres to the principles of modularity and hierarchy, mirroring the YouTube data model for intuitive understanding and easy scalability. Whether you are fetching data for a single video, aggregating content from a playlist, or diving deep into channel analytics, this module is crafted to ensure efficiency and ease of use.
+
+
+
+```python
+class Channel:
+
+    def get_channel_videos(self):
+        """Determines the uploads playlist ID and returns a list of Video elements."""
+        pass
+
+    def get_playlist_id(self, name):
+        """Finds the ID of a playlist based on the provided name."""
+        pass
+```
+
