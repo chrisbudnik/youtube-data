@@ -8,7 +8,7 @@ Welcome to the Youtube-Data repository. Dive into an efficient suite designed fo
 - **`Channel`**: Retrieve all video IDs associated with a channel.
 - **`YoutubeSearch`**: A dedicated class to find channels or inspect video IDs.
 - **`VideoDataCollector`**: A class to fetch video data based on video or channel IDs.
-- **`Trending`** Fetch video ids from country's trending page - *in progess*.
+- **`Trending`** Fetch video IDs from country's trending page - *in progess*.
 
 ## 📁 Directory Structure:
 ### 1. `youtube`

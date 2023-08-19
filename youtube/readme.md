@@ -28,6 +28,7 @@ class YoutubeContent(ABC):
 1. **Video**: This is the smallest and most granular data structure. It contains methods that allow extraction of static properties, dynamic statistics, and video transcripts.
 ```python
 class Video:
+    ...
 
     def get_video_properties(self):
         """
@@ -50,6 +51,7 @@ class Video:
 2. **Playlist**: Represents a collection of videos. It has a primary function of extracting all videos that are part of it. This is achived with `get_playlist_videos` method that gathers all correspodning `Video` in a list format.
 ```python
 class Playlist:
+    ...
 
     def get_playlist_videos(self):
         """Gathers all corresponding Video elements in a list format."""
@@ -58,7 +60,8 @@ class Playlist:
 3. **Channel**: The highest level in the data hierarchy. It encompasses both videos and playlists. It offers functionalities such as finding a playlist by its name and extracting all videos from the "uploads" playlist.
 ```python
 class Channel:
-
+    ...
+    
     def get_channel_videos(self):
         """Determines the uploads playlist ID and returns a list of Video elements."""
         pass
