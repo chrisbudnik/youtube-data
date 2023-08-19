@@ -6,7 +6,7 @@ The YouTube module is a comprehensive tool built around the YouTube API, designe
 ### Design Architecture:
 
 #### Core:
-At the heart of this module lies the `YoutubeContent` class, an abstract base class which serves as the foundation for the major components: `Video`, `Channel`, `Playlist`, and `YoutubeSearch`. It's responsible for establishing the YouTube API connection, ensuring that all subclasses have access to it.
+At the heart of this module lies the `YoutubeContent` class, an abstract base class which serves as the foundation for the major components: `Video`, `Channel`, `Playlist`, and `YoutubeSearch`. It's responsible for establishing the YouTube API connection, ensuring that all subclasses have access to it. [Check out the implementation here](./content.py)
 
 ```python
 class YoutubeContent(ABC):
@@ -26,7 +26,7 @@ class YoutubeContent(ABC):
 
 #### Data Structure Hierarchy:
 1. **Video**: This is the smallest and most granular data structure. It contains methods that allow extraction of static properties, dynamic statistics, and video transcripts.
-[Check out the implementation here](./youtube/video.py)
+[Check out the implementation here](./video.py)
 ```python
 class Video:
     ...
@@ -49,7 +49,7 @@ class Video:
         """Extracts video transcript."""
         pass
 ```
-2. **Playlist**: Represents a collection of videos. It has a primary function of extracting all videos that are part of it. This is achived with `get_playlist_videos` method that gathers all correspodning `Video` in a list format. [Check out the implementation here](./youtube/playlist.py)
+2. **Playlist**: Represents a collection of videos. It has a primary function of extracting all videos that are part of it. This is achived with `get_playlist_videos` method that gathers all correspodning `Video` in a list format. [Check out the implementation here](./playlist.py)
 ```python
 class Playlist:
     ...
@@ -58,7 +58,7 @@ class Playlist:
         """Gathers all corresponding Video elements in a list format."""
         pass
 ```
-3. **Channel**: The highest level in the data hierarchy. It encompasses both videos and playlists. It offers functionalities such as finding a playlist by its name and extracting all videos from the "uploads" playlist. [Check out the implementation here](./youtube/channel.py)
+3. **Channel**: The highest level in the data hierarchy. It encompasses both videos and playlists. It offers functionalities such as finding a playlist by its name and extracting all videos from the "uploads" playlist. [Check out the implementation here](./channel.py)
 ```python
 class Channel:
     ...
@@ -75,7 +75,7 @@ class Channel:
 The hierarchy visualizes as: **Channel** > **Playlist** > **Video**. This encapsulates the real-world relationship of YouTube entities.
 
 #### **YoutubeSearch**:
-Built atop `YoutubeContent`, this class offers search functionalities. Its prowess is showcased in methods such as `collect_exact_terms`, which finds channel IDs based on their names, and `best_ranking_channels`, which ranks channels based on video view counts and selected keywords. [Check out the implementation here](./youtube/search.py)
+Built atop `YoutubeContent`, this class offers search functionalities. Its prowess is showcased in methods such as `collect_exact_terms`, which finds channel IDs based on their names, and `best_ranking_channels`, which ranks channels based on video view counts and selected keywords. [Check out the implementation here](./search.py)
 
 #### **VideoDataCollector**:
 This interface simplifies the data collection process. It operates with two main methods:
@@ -83,22 +83,7 @@ This interface simplifies the data collection process. It operates with two main
 2. `get_data_from_videos`: Retrieves video data using a list of video IDs.
 
 For conveniance `VideoDataCollector` can serve both functionalities at the same time, since it allows provision of both channel IDs and video IDs. </br>
-[Check out the implementation here](./youtube/video_data_collector.py)
+[Check out the implementation here](./video_data_collector.py)
 
 ### Final Thoughts:
 The architectural design of the YouTube module adheres to the principles of modularity and hierarchy, mirroring the YouTube data model for intuitive understanding and easy scalability. Whether you are fetching data for a single video, aggregating content from a playlist, or diving deep into channel analytics, this module is crafted to ensure efficiency and ease of use.
-
-
-
-```python
-class Channel:
-
-    def get_channel_videos(self):
-        """Determines the uploads playlist ID and returns a list of Video elements."""
-        pass
-
-    def get_playlist_id(self, name):
-        """Finds the ID of a playlist based on the provided name."""
-        pass
-```
-
