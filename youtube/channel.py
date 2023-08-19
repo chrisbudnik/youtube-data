@@ -1,9 +1,9 @@
-from .content import YouTubeAPI
+from .content import YoutubeContent
 from .video import Video
 from .playlist import Playlist
 
 
-class Channel(YouTubeAPI):
+class Channel(YoutubeContent):
     """
     Class represents a YouTube channel, storing its unique identifier and related attributes. 
     Integrated with the YouTube API, this class provides methods to fetch core details 
@@ -33,7 +33,7 @@ class Channel(YouTubeAPI):
         The name of the channel, lazily loaded upon first access.
         """
         if self._channel_name is None: 
-            response = self.get_channel_response(self.channel_id, 'snippet')
+            response = self.get_response(self.channel_id, 'snippet')
             self._channel_name = response['items'][0]['snippet']['title']
         return self._channel_name
     
@@ -55,9 +55,15 @@ class Channel(YouTubeAPI):
         if hasattr(self, '_subscriber_count'):
             return self._subscriber_count
 
-        response = self.get_channel_response(self.channel_id, 'statistics')
+        response = self.get_response(self.channel_id, 'statistics')
         self._subscriber_count = int(response['items'][0]['statistics']['subscriberCount'])
         return self._subscriber_count
+    
+    def get_response(self, channel_id: str, part: str):
+        return self.youtube.channels().list(
+            part=part,
+            id=channel_id
+        ).execute()
     
     def info(self) -> tuple:
         """
@@ -89,7 +95,7 @@ class Channel(YouTubeAPI):
         Retrieves the ID of a specific type of playlist associated with the channel, 
         e.g., "uploads" for the channel's uploaded videos.
         """
-        channel_response = self.get_channel_response(self.channel_id, 'contentDetails')
+        channel_response = self.get_response(self.channel_id, 'contentDetails')
         playlist_id = channel_response['items'][0]['contentDetails']['relatedPlaylists'][type]
         return playlist_id
     
