@@ -7,7 +7,7 @@ class YouTubeAPI:
     channel details, search results, and playlist items.
     """
     def __init__(self):
-        self.youtube = build(Config.YOUTUBE_API_SERVICE_NAME, Config.YOUTUBE_API_VERSION, developerKey=Config.DEVELOPER_KEY)
+        self.youtube = build("youtube", "v3", developerKey=None)
 
     def get_video_response(self, video_id: str, part: str):
         return self.youtube.videos().list(

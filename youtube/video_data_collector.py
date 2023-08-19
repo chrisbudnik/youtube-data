@@ -1,7 +1,7 @@
 from typing import Optional
 from tqdm import tqdm
-from video import Video
-from channel import Channel
+from .video import Video
+from .channel import Channel
 
 
 class VideoDataCollector:
