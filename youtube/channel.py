@@ -12,9 +12,6 @@ class Channel(YoutubeContent):
     def __init__(self, channel_id: str) -> None:
         super().__init__()
         self.channel_id = channel_id
-        
-        self._channel_name = None  
-        self._uploads_playlist_id = None
     
     def __repr__(self) -> str:
         return f"Channel(channel_id={self.channel_id})"
@@ -32,19 +29,23 @@ class Channel(YoutubeContent):
         """
         The name of the channel, lazily loaded upon first access.
         """
-        if self._channel_name is None: 
+        if not hasattr(self, '_channel_name'):
             response = self.get_response(self.channel_id, 'snippet')
             self._channel_name = response['items'][0]['snippet']['title']
+            return self._channel_name
+        
         return self._channel_name
-    
+
     @property
     def uploads_playlist_id(self) -> str:
         """
         The ID of the playlist containing all the uploads of the channel, 
         lazily loaded upon first access.
         """
-        if self._uploads_playlist_id is None: 
+        if not hasattr(self, '_uploads_playlist_id'):
             self._uploads_playlist_id = self.get_playlist_id(type="uploads")
+            return self._uploads_playlist_id
+        
         return self._uploads_playlist_id
     
     @property
@@ -52,11 +53,11 @@ class Channel(YoutubeContent):
         """
         The number of subscribers to the channel, lazily loaded upon first access.
         """
-        if hasattr(self, '_subscriber_count'):
+        if not hasattr(self, '_subscriber_count'):
+            response = self.get_response(self.channel_id, 'statistics')
+            self._subscriber_count = int(response['items'][0]['statistics']['subscriberCount'])
             return self._subscriber_count
-
-        response = self.get_response(self.channel_id, 'statistics')
-        self._subscriber_count = int(response['items'][0]['statistics']['subscriberCount'])
+        
         return self._subscriber_count
     
     def get_response(self, channel_id: str, part: str):
