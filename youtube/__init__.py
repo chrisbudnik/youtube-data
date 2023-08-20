@@ -1,4 +1,5 @@
 from .content import YoutubeContent
+from .youtube_api import YouTubeAPI
 from .video import Video
 from .playlist import Playlist
 from .channel import Channel
