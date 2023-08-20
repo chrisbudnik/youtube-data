@@ -1,6 +1,6 @@
 from tqdm import tqdm
 from datetime import datetime, timezone, timedelta
-from typing import Literal, Union, List
+from typing import Optional, Literal, Union, List
 
 from .video import Video
 from .channel import Channel
@@ -17,6 +17,7 @@ class YouTubeSearch(YoutubeContent):
     def __init__(self, keywords: list[str]):
         super().__init__()
         self.keywords = keywords
+        self.quota_credits_used = 0
     
     def get_response(
             self, 
@@ -25,7 +26,9 @@ class YouTubeSearch(YoutubeContent):
             type: Literal["video", "channel", "playlist", "movie"],
             order_by: Literal["viewCount", "relevance", "date"],
             max_results: int,
-            published_after = None
+            published_after = None,
+            region_code: Optional[str] = "US",
+            relevance_language: Optional[str] = "en"
             ):
         
         return self.youtube.search().list(
@@ -34,7 +37,9 @@ class YouTubeSearch(YoutubeContent):
                 order=order_by,
                 publishedAfter=published_after,
                 part=part,
-                maxResults=max_results
+                maxResults=max_results,
+                regionCode=region_code, 
+                relevanceLanguage=relevance_language
             ).execute()
 
 
@@ -109,7 +114,9 @@ class YouTubeSearch(YoutubeContent):
         ranking_start_date = (datetime.now(timezone.utc) - timedelta(days=timeframe)).strftime("%Y-%m-%dT%H:%M:%SZ")
         best_ranking_videos = self.execute_search(type='video', max_results=max_results, published_after=ranking_start_date, order_by=order_by)
 
-        best_ranking_channels = [Channel(video.channel_id) for video in best_ranking_videos]
+        best_ranking_channels = []
+        for video in tqdm(best_ranking_videos, desc="Extracting channel ids from videos..."):
+            best_ranking_channels.append(Channel(video.channel_id))
                
         if only_unique:
             best_ranking_channels = list(set(best_ranking_channels))
