@@ -1,0 +1,16 @@
+# This file may be used to create an environment using:
+# $ conda create --name <env> --file <this file>
+# platform: osx-arm64
+
+google-api-core
+google-api-python-client
+google-auth
+google-auth-httplib2
+google-cloud
+google-cloud-bigquery
+google-cloud-core
+google-crc32c
+google-resumable-media
+googleapis-common-protos
+youtube-transcript-api
+tqdm
