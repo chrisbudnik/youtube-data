@@ -82,7 +82,7 @@ This interface simplifies the data collection process. It operates with two main
 1. `get_data_from_channels`: Extracts video data using a list of channel IDs.
 2. `get_data_from_videos`: Retrieves video data using a list of video IDs.
 
-For conveniance `VideoDataCollector` can serve both functionalities at the same time, since it allows provision of both channel IDs and video IDs. </br>
+For conveniance `VideoDataCollector` can serve both functionalities at the same time, since it allows provision of both channel IDs and video IDs. 
 [Check out the implementation here](./video_data_collector.py)
 
 ### Final Thoughts:

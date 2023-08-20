@@ -4,7 +4,7 @@ Welcome to the tutorials section of the Youtube Data Toolset. This section is ta
 
 ## 📚 Tutorials Index:
 
-### 2. **Channel Discovery** [`channel-discovery.py`]
+### 1. **Channel Discovery** [`channel-discovery.py`]
 - Read search terms from a `.txt` file.
 - Utilize `YoutubeSearch` to find top-ranking channels.
 - Extract essential channel information, such as:
@@ -14,22 +14,21 @@ Welcome to the tutorials section of the Youtube Data Toolset. This section is ta
   - Subscriber Count
 - Insert the extracted data into a BigQuery table using the CSV format.
 
-### 3. **Find Channel IDs** [`find-channel-ids.py`]
+### 2. **Find Channel IDs** [`find-channel-ids.py`]
 - Extract search terms from a `.txt` file.
 - Employ the `search_exact_terms()` method under the `YoutubeSearch` class to pinpoint IDs based on specific channel names.
 - Save the results into a CSV file.
 
-### 4. **Collect Video Properties** [`collect-video-properties`]
+### 3. **Collect Video Properties** [`collect-video-properties`]
 - Read a CSV file containing channel IDs.
 - Delve deep with `VideoDataCollector` and harness the power of the `collect_data_from_channels()` method:
   - Collect video property data from the latest n videos of each channel.
 - Export this data to a CSV file.
 
-### 5. **Collect Video Stats** [`collect-video-stats`]
+### 4. **Collect Video Stats** [`collect-video-stats`]
 - Utilize `automated_query` to retrieve channel data from BigQuery.
 - Use the `collect_data_from_videos()` function:
   - Extract video statistics pertinent to the current date.
-- Directly export this valuable data to BigQuery using the `automated_insert()` method.
 
 ## 🚀 Getting Started:
 1. Navigate to the desired tutorial file.
