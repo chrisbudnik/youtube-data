@@ -23,3 +23,34 @@ Welcome to the Youtube-Data repository. Dive into an efficient suite designed fo
   - Finding channel IDs (exact keyword search).
   - Extracting video properties and statistics.
 
+## 🚀 Setup
+
+To get started with the Youtube-Data repository and take full advantage of its powerful features, follow the steps below:
+
+1. **Environment Setup**:
+   - Clone the repository to your local machine.
+   - Navigate to the root directory of the project.
+   - Install the required packages using:
+     ```bash
+     pip install -r requirements.txt
+     ```
+
+2. **API Key Configuration**:
+   - Before utilizing the modules, you need to have a YouTube API v3 key. Generate one using the [Google Cloud Platform Console](https://console.cloud.google.com/).
+   - Once you have the key, set up an environment variable named `YOUTUBE_API_KEY`. Depending on your operating system, you can set it as:
+     - For Linux/MacOS:
+       ```bash
+       export YOUTUBE_API_KEY="YOUR_API_KEY"
+       ```
+     - For Windows:
+       ```cmd
+       set YOUTUBE_API_KEY="YOUR_API_KEY"
+       ```
+
+3. **Install as a Package**:
+   - If you want to install the repository as a Python package for easier import in your projects, run:
+     ```bash
+     python setup.py install
+     ```
+
+Now you're all set! Dive into the `examples` directory to see some practical implementations and get a feel for how to leverage the provided classes and methods.
