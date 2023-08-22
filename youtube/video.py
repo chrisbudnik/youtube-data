@@ -11,7 +11,6 @@ class Video(YoutubeContent):
     Represents a YouTube video, encapsulating its unique identifier and core attributes. 
     Functionality to extract static video properties, statisitcs and transcript.
     """
-    SHORTS_MAX_LENGTH = 60
     
     def __init__(self, video_id:str) -> None:
         super().__init__()
@@ -71,10 +70,7 @@ class Video(YoutubeContent):
 
         # processing video length
         duration = response['items'][0].get('contentDetails', {}).get('duration', 'Not Found')
-        if duration != 'Not Found':
-            video_length = self._convert_time_to_seconds(duration)
-        else:
-            video_length = 0
+        video_length = self._convert_time_to_seconds(duration)
         
         # processing other response parts
         snippet = response['items'][0]['snippet']
@@ -88,7 +84,7 @@ class Video(YoutubeContent):
             "category_id": snippet.get('categoryId', 'Not Found'),
             "published_at": self._parse_date(snippet.get('publishedAt', 'Not Found')),
             "length": video_length,
-            "type": ("shorts" if video_length <= self.SHORTS_MAX_LENGTH else "video"),
+            "type": self._extract_video_type(video_length),
             "license": "Standard License" if status.get('license', 'Not Found') == 'youtube' else "Creative Commons",
             "made_for_kids": status.get('madeForKids', 'Not Found'),
             "user_tags": snippet.get('tags', []),
@@ -144,14 +140,19 @@ class Video(YoutubeContent):
         """
         Convert a given duration format (used by YouTube) to total seconds.
         """
-        pattern = r'PT((\d+)H)?((\d+)M)?((\d+)S)?'
-        match = re.match(pattern, time_string)
+        try:
+            pattern = r'PT((\d+)H)?((\d+)M)?((\d+)S)?'
+            match = re.match(pattern, time_string)
 
-        hours = int(match.group(2)) if match.group(2) else 0
-        minutes = int(match.group(4)) if match.group(4) else 0
-        seconds = int(match.group(6)) if match.group(6) else 0
+            hours = int(match.group(2)) if match.group(2) else 0
+            minutes = int(match.group(4)) if match.group(4) else 0
+            seconds = int(match.group(6)) if match.group(6) else 0
 
-        total_seconds = hours * 3600 + minutes * 60 + seconds
+            total_seconds = hours * 3600 + minutes * 60 + seconds
+
+        except AttributeError:
+            total_seconds = 0
+
         return total_seconds
 
     @staticmethod
@@ -160,3 +161,17 @@ class Video(YoutubeContent):
         Convert a given date string to standard ISO format.
         """
         return parse(date_string).date().isoformat()
+    
+    @staticmethod
+    def _extract_video_type(video_length: int) -> str:
+        """
+        Based on provided video length return video type.
+        """
+        SHORTS_MAX_LENGTH = 60
+
+        if video_length == 0:
+            return "unknown"
+        elif video_length <= SHORTS_MAX_LENGTH and video_length > 0:
+            return "shorts"
+        else:
+            return "video"
