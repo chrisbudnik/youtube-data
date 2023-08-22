@@ -17,7 +17,7 @@ n_videos = 0
 
 start_time = time.time()
 
-with open(PATH_TO_CHANNEL_DATA, 'r') as channelid_csv, open(PATH_TO_PROPERTIES, "w") as properties_csv, open(PATH_TO_STATS, "w") as properties_csv:
+with open(PATH_TO_CHANNEL_DATA, 'r') as channelid_csv, open(PATH_TO_PROPERTIES, "w") as properties_csv, open(PATH_TO_STATS, "w") as stats_csv:
     # reader
     reader = csv.DictReader(channelid_csv)
 
@@ -27,10 +27,10 @@ with open(PATH_TO_CHANNEL_DATA, 'r') as channelid_csv, open(PATH_TO_PROPERTIES, 
                "category_id", "published_at", "video_length", "type",
                "license", "made_for_kids", "user_tags", "description",
                "transcript"]
-    pwriter.writerow("video_id")
+    pwriter.writerow(pheader)
 
     # stats writer 
-    swriter = csv.writer(properties_csv)
+    swriter = csv.writer(stats_csv)
     sheader = ["date", "video_id", "views", "likes", "comments"]
     swriter.writerow(sheader)
 
@@ -38,7 +38,7 @@ with open(PATH_TO_CHANNEL_DATA, 'r') as channelid_csv, open(PATH_TO_PROPERTIES, 
     for row in tqdm(reader, desc="Processing channels..."):
         # get channel videos
         channel = Channel(channel_id=row['channel_id'])
-        channel_videos = channel.get_channel_videos()
+        channel_videos = channel.get_channel_videos(max_results=25)
 
         # iterate over channel videos
         for video in channel_videos:
