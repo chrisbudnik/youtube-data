@@ -33,8 +33,15 @@ class VideoDataCollector:
             channel_videos = channel.get_channel_videos(max_videos)
 
             for video in channel_videos:
-                video_data = video.get_video_properties() | video.get_video_transcript()
-                all_video_data.append(video_data)
+                try:
+                    video_data = video.get_video_properties() | video.get_video_transcript()
+                    all_video_data.append(video_data)
+
+                # youtube transcript api sometimes returns connection errors. 
+                # After they occur, Video.get_transcript() method raises ValueError. 
+                # Becouse these are rare, I chose to skip when found.
+                except ValueError:
+                    continue
 
         return all_video_data
 
