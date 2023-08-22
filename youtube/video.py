@@ -98,13 +98,16 @@ class Video(YoutubeContent):
         """
         response = self.get_response(self.video_id, 'statistics, contentDetails')
         
+        statistics = response['items'][0].get('statistics', {})
+
         video_stats = {
             "date": datetime.now().strftime('%Y-%m-%d'),
             "video_id": self.video_id,
-            "views": response['items'][0]['statistics']['viewCount'],
-            "likes": response['items'][0]['statistics']['likeCount'],
-            "comments": response['items'][0]['statistics'].get('commentCount', 0),
+            "views": statistics.get('viewCount', 0),
+            "likes": statistics.get('likeCount', 0),
+            "comments": statistics.get('commentCount', 0),
         }
+
         return video_stats
     
     def get_video_data(self) -> dict:
