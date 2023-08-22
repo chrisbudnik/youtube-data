@@ -134,6 +134,9 @@ class Video(YoutubeContent):
         except VideoUnavailable:
             full_transcript = {"transcript": "transcript-unavailable"}
 
+        except Exception:
+            raise ValueError("Could not extract video transcript, unconventional api error occured.")
+
         return full_transcript  
 
     @staticmethod
