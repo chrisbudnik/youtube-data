@@ -4,7 +4,7 @@
 # 3. Save results into csv file (get data from latest 25 videos)
 
 import sys
-sys.path.append('/Users/chrisbudnik/Desktop/Projects/youtube-research')
+sys.path.append('/Users/chrisbudnik/Desktop/Projects/youtube-data')
 
 import csv
 from youtube import VideoDataCollector
