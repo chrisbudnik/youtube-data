@@ -2,6 +2,7 @@ import re
 from dateutil.parser import parse
 from datetime import datetime
 from youtube_transcript_api import YouTubeTranscriptApi
+from youtube_transcript_api._errors import TranscriptsDisabled, NoTranscriptFound, VideoUnavailable
 from .content import YoutubeContent
 
 
@@ -68,21 +69,30 @@ class Video(YoutubeContent):
         """
         response = self.get_response(self.video_id, 'contentDetails, snippet, status')
 
-        video_length = self._convert_time_to_seconds(response['items'][0]['contentDetails']['duration'])
+        # processing video length
+        duration = response['items'][0].get('contentDetails', {}).get('duration', 'Not Found')
+        if duration != 'Not Found':
+            video_length = self._convert_time_to_seconds(duration)
+        else:
+            video_length = 0
+        
+        # processing other response parts
+        snippet = response['items'][0]['snippet']
+        status = response['items'][0]['status']
 
         video_stats = {
             "video_id": self.video_id,
-            "video_name": response['items'][0]['snippet']['title'],
-            "channel_id": response['items'][0]['snippet']['channelId'],
-            "channel_name": response['items'][0]['snippet']['channelTitle'],
-            "category_id": response['items'][0]['snippet']['categoryId'],
-            "published_at": self._parse_date(response['items'][0]['snippet']['publishedAt']),
+            "video_name": snippet.get('title', 'Not Found'),
+            "channel_id": snippet.get('channelId', 'Not Found'),
+            "channel_name": snippet.get('channelTitle', 'Not Found'),
+            "category_id": snippet.get('categoryId', 'Not Found'),
+            "published_at": self._parse_date(snippet.get('publishedAt', 'Not Found')),
             "length": video_length,
             "type": ("shorts" if video_length <= self.SHORTS_MAX_LENGTH else "video"),
-            "license": "Standard License" if response['items'][0]['status']['license'] == 'youtube' else "Creative Commons",
-            "made_for_kids": response['items'][0]['status']['madeForKids'],
-            "user_tags": response['items'][0]['snippet'].get('tags', []),
-            "description": response['items'][0]['snippet']['description'],
+            "license": "Standard License" if status.get('license', 'Not Found') == 'youtube' else "Creative Commons",
+            "made_for_kids": status.get('madeForKids', 'Not Found'),
+            "user_tags": snippet.get('tags', []),
+            "description": snippet.get('description', 'Not Found'),
         }
         return video_stats
     
@@ -111,8 +121,19 @@ class Video(YoutubeContent):
         Fetch and return the transcript of the video in a consolidated string format.
         """
         id = self.video_id[:11]
-        transcript = YouTubeTranscriptApi.get_transcript(id)
-        full_transcript = {"transcript": " ".join([part['text'] for part in transcript])}
+        try:
+            transcript = YouTubeTranscriptApi.get_transcript(id)
+            full_transcript = {"transcript": " ".join([part['text'] for part in transcript])}
+
+        except TranscriptsDisabled:
+            full_transcript = {"transcript": "transcript-disabled"}
+
+        except NoTranscriptFound:
+            full_transcript = {"transcript": "transcript-not-found"}
+
+        except VideoUnavailable:
+            full_transcript = {"transcript": "transcript-unavailable"}
+
         return full_transcript  
 
     @staticmethod
