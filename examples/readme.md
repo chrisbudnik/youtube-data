@@ -19,16 +19,18 @@ Welcome to the tutorials section of the Youtube Data Toolset. This section is ta
 - Employ the `search_exact_terms()` method under the `YoutubeSearch` class to pinpoint IDs based on specific channel names.
 - Save the results into a CSV file.
 
-### 3. **Collect Video Properties** [`collect-video-properties`]
+### 3. **Collect Video Properties** [`collect-video-properties.py`]
 - Read a CSV file containing channel IDs.
 - Delve deep with `VideoDataCollector` and harness the power of the `collect_data_from_channels()` method:
   - Collect video property data from the latest n videos of each channel.
 - Export this data to a CSV file.
 
-### 4. **Collect Video Stats** [`collect-video-stats`]
-- Utilize `automated_query` to retrieve channel data from BigQuery.
-- Use the `collect_data_from_videos()` function:
+### 4. **Collect Video Data** [`collect-video-stats.py`]
+- Read a CSV file containing channel IDs.
+- Utilize Channel method `get_channel_videos` and 
+- Video methods used: `get_video_properties` and `get_video_statistics`
   - Extract video statistics pertinent to the current date.
+- While reading channels, simultaneously save to respective csv files
 
 ## 🚀 Getting Started:
 1. Navigate to the desired tutorial file.
