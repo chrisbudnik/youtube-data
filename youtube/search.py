@@ -2,6 +2,8 @@ from tqdm import tqdm
 from datetime import datetime, timezone, timedelta
 from typing import Optional, Literal, Union, List
 
+from googleapiclient.errors import HttpError
+
 from .video import Video
 from .channel import Channel
 from .content import YoutubeContent
@@ -66,14 +68,19 @@ class YouTubeSearch(YoutubeContent):
         all_search_data = []
 
         for key in tqdm(self.keywords, desc="Collecting results for keyword..."):
-            search_response = self.get_response(key, 'id, snippet', type, order_by, max_results, published_after)
+            try:
+                search_response = self.get_response(key, 'id, snippet', type, order_by, max_results, published_after)
 
-            for item in search_response.get('items', []):
-                    result = item['id'][f'{type}Id']
-                    if type == "video": 
-                        all_search_data.append(Video(result))
-                    else: 
-                        all_search_data.append(Channel(result))
+                for item in search_response.get('items', []):
+                        result = item['id'][f'{type}Id']
+                        if type == "video": 
+                            all_search_data.append(Video(result))
+                        else: 
+                            all_search_data.append(Channel(result))
+            
+            except HttpError:
+                print("Quota limit reached!")
+                break
 
         return all_search_data
 
